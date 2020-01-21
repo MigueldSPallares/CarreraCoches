@@ -1,5 +1,6 @@
 package principal;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Principal {
@@ -19,12 +20,19 @@ public class Principal {
 				opcion = menu.pintaMenu();
 				switch (opcion) {
 				case 1:
+					if(carrera.carreraConfigurada()) {
+						
+					}else {
+						System.out.println("La carrera requiere al menos dos participantes");
+					}
 					if(c!=null) {
 						c.arrancar();
 						do{
 							leer = new Scanner(System.in);
 							int elec;
-							System.out.println("Ponga 1 si quiere acelerar, 2 si quiere frenar o 3 si quiere rearrancar");
+							System.out.println("1- Acelerar");
+							System.out.println("2- Frenar");
+							System.out.println("3- Rearrancar");
 							try {
 								elec = leer.nextInt();
 								if(elec==1) {
@@ -40,7 +48,7 @@ public class Principal {
 									if(c.getEstado().equalsIgnoreCase("ACCIDENTADO")) {
 										c.rearrancar();
 									}else {
-										System.out.println("El coche est� arrancado");
+										System.out.println("El coche está arrancado");
 									}
 								}
 							} catch (Exception e) {
@@ -55,14 +63,16 @@ public class Principal {
 					}
 					break;
 				case 2:
-					
+					carrera.crearCoche();
 					break;
 				case 3:
 					System.out.println("Saliendo");
 					break;
 				}
+			}catch (InputMismatchException e) {
+				System.out.println("Dato no válido");
 			}catch (Exception e) {
-				System.out.println("Dato no v�lido");
+				System.out.println("Error detectado");
 			}
 		}while(opcion!=3);
 	}
