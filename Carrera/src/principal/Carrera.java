@@ -136,22 +136,28 @@ public class Carrera {
 				int elec;
 				elec = menu.pintaMenu2();
 				try {
-					switch (elec) {
-					case 1:
-						if(coche.getEstado().equalsIgnoreCase("Marcha")) {
-							coche.acelerar();
+					if(!vParticipantes[i].getEstado().equalsIgnoreCase("Terminado")) {
+						switch (elec) {
+						case 1:
+							if(coche.getEstado().equalsIgnoreCase("Marcha")) {
+								coche.acelerar();
+							}
+							break;
+						case 2:
+							if(coche.getEstado().equalsIgnoreCase("Marcha")) {
+								coche.frenar();
+							}
+							break;
+						case 3:
+							if(coche.getEstado().equalsIgnoreCase("Accidentado")) {
+								coche.rearrancar();
+							}else {
+								System.out.println("El coche no está accidentado");
+							}
+							break;
+						default:
+							break;
 						}
-						break;
-					case 2:
-						if(coche.getEstado().equalsIgnoreCase("Marcha")) {
-							coche.frenar();
-						}
-						break;
-					case 3:
-	
-						break;
-					default:
-						break;
 					}
 				}catch (InputMismatchException e){
 					System.out.println("Dato no válido");
@@ -160,7 +166,7 @@ public class Carrera {
 				}
 				System.out.println("Participan " + numCoches() + " coches");
 				System.out.println("Hay " + numCochesMarcha() + " coches arrancados");
-				System.out.println("Hay " + numCochesTerminado() + " que han terminado");
+				System.out.println("Hay " + numCochesTerminado() + " coches que han terminado");
 				if(carreraTerminada()) {
 					System.out.println("La carrera ha terminado");
 				}else {
