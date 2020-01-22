@@ -12,7 +12,7 @@ public class Principal {
 		
 		//Dime los datos de la carrera
 		
-		Carrera carrera = new Carrera("Informatica Race", 200);
+		Carrera carrera = new Carrera("Informatica Race", 1000);
 		
 		Menu menu = new Menu();
 		do {
@@ -21,7 +21,7 @@ public class Principal {
 				switch (opcion) {
 				case 1:
 					if(carrera.carreraConfigurada()) {
-						
+						carrera.jugar();
 					}else {
 						System.out.println("La carrera requiere al menos dos participantes");
 					}
@@ -48,7 +48,7 @@ public class Principal {
 									if(c.getEstado().equalsIgnoreCase("ACCIDENTADO")) {
 										c.rearrancar();
 									}else {
-										System.out.println("El coche est√° arrancado");
+										System.out.println("El coche est· arrancado");
 									}
 								}
 							} catch (Exception e) {
@@ -70,7 +70,7 @@ public class Principal {
 					break;
 				}
 			}catch (InputMismatchException e) {
-				System.out.println("Dato no v√°lido");
+				System.out.println("Dato no v·lido");
 			}catch (Exception e) {
 				System.out.println("Error detectado");
 			}

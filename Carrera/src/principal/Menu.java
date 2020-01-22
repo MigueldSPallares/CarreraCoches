@@ -21,6 +21,7 @@ public class Menu {
 			System.out.println("1- Acelerar");
 			System.out.println("2- Frenar");
 			System.out.println("3- Rearrancar");
+			opc = leer.nextInt();
 		}while(opc>3 || opc<1);
 		return opc;
 	}

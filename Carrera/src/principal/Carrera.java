@@ -34,7 +34,7 @@ public class Carrera {
 	public void crearCoche() {
 		Scanner leer = new Scanner(System.in);
 		int dorsal;
-		int pos=0;
+		int pos = 0;
 		String nom;
 		boolean bandera = false;
 		System.out.println("Pon la dorsal del piloto");
@@ -53,18 +53,19 @@ public class Carrera {
 			if (vParticipantes[i] == null) {
 				pos = i;
 				bandera = true;
+				break;
 			}
 		}
 		if (bandera) {
 			vParticipantes[pos] = new Coche(nom, dorsal, distanciaCarrera);
-			System.out.println ("Participante a√±adido");
+			System.out.println("Participante aÒadido");
 		} else {
-			System.out.println("No se puede a√±adir m√°s participantes");
+			System.out.println("No se puede aÒadir m·s participantes");
 		}
 	}
-	
+
 	public int numCoches() {
-		int numCoche=0;
+		int numCoche = 0;
 		for (int i = 0; i < vParticipantes.length; i++) {
 			if (vParticipantes[i] != null) {
 				numCoche++;
@@ -72,8 +73,9 @@ public class Carrera {
 		}
 		return numCoche;
 	}
+
 	public int numCochesMarcha() {
-		int numCocheMar=0;
+		int numCocheMar = 0;
 		for (int i = 0; i < vParticipantes.length; i++) {
 			if (vParticipantes[i] != null && vParticipantes[i].getEstado().equalsIgnoreCase("Marcha")) {
 				numCocheMar++;
@@ -81,8 +83,9 @@ public class Carrera {
 		}
 		return numCocheMar;
 	}
+
 	public int numCochesTerminado() {
-		int numCocheTer=0;
+		int numCocheTer = 0;
 		for (int i = 0; i < vParticipantes.length; i++) {
 			if (vParticipantes[i] != null && vParticipantes[i].getEstado().equalsIgnoreCase("Terminado")) {
 				numCocheTer++;
@@ -91,42 +94,49 @@ public class Carrera {
 		return numCocheTer;
 	}
 
-	public boolean carreraTerminada() {
-		boolean lleg=false, term=false;
-		for (int i = 0; i < vParticipantes.length; i++) {
-			if(vParticipantes[i].getEstado().equalsIgnoreCase("Terminado")) {
-				lleg = true;
+	public boolean poderRearrancar() {
+		boolean lleg = true;
+		for (Coche coche : vParticipantes) {
+			if (coche.getEstado().equalsIgnoreCase("Terminado")) {
+				lleg = false;
 				break;
 			}
 		}
-		for (int i = 0; i < vParticipantes.length; i++) {
-			if(vParticipantes[i].getEstado().equalsIgnoreCase("Terminado") || (vParticipantes[i].getEstado().equalsIgnoreCase("Accidentado")&&lleg)) {
-				term = true;
-			}else {
-				term = false;
-				break;
-			}
-		}
-		return term;
+		return lleg;
 	}
+
+	public boolean carreraTerminada() {
+		boolean term = true;
+		for (int i = 0; i < numCoches(); i++) {
+			Coche coche = vParticipantes[i];
+			if (coche != null) {
+				if (coche.getEstado().equalsIgnoreCase("Marcha")) {
+					term = false;
+					break;
+				}
+			}
+		}return term;
+
+	}
+
 	public boolean carreraConfigurada() {
 		int partinTotal = 0;
 		for (int i = 0; i < vParticipantes.length; i++) {
-			if(vParticipantes[i] != null) {
-				partinTotal ++;
+			if (vParticipantes[i] != null) {
+				partinTotal++;
 			}
 		}
-		if(partinTotal>1) {
+		if (partinTotal > 1) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	public void jugar() {
 		Menu menu = new Menu();
 		for (int i = 0; i < vParticipantes.length; i++) {
-			if(vParticipantes[i] != null) {
+			if (vParticipantes[i] != null) {
 				vParticipantes[i].arrancar();
 			}
 		}
@@ -134,45 +144,51 @@ public class Carrera {
 			for (int i = 0; i < vParticipantes.length; i++) {
 				Coche coche = vParticipantes[i];
 				int elec;
-				elec = menu.pintaMenu2();
-				try {
-					if(!vParticipantes[i].getEstado().equalsIgnoreCase("Terminado")) {
-						switch (elec) {
-						case 1:
-							if(coche.getEstado().equalsIgnoreCase("Marcha")) {
-								coche.acelerar();
+				if (coche != null) {
+					if (!coche.getEstado().equalsIgnoreCase("Terminado")) {
+						System.out.println("Corredor " + (i + 1));
+						elec = menu.pintaMenu2();
+						try {
+							switch (elec) {
+							case 1:
+								if (coche.getEstado().equalsIgnoreCase("Marcha")) {
+									coche.acelerar();
+								}
+								break;
+							case 2:
+								if (coche.getEstado().equalsIgnoreCase("Marcha")) {
+									coche.frenar();
+								}
+								break;
+							case 3:
+								if (coche.getEstado().equalsIgnoreCase("Accidentado")) {
+									coche.rearrancar();
+								} else {
+									System.out.println("El coche no est· accidentado");
+								}
+								break;
+							default:
+								break;
 							}
-							break;
-						case 2:
-							if(coche.getEstado().equalsIgnoreCase("Marcha")) {
-								coche.frenar();
+							if (coche.getKmRecorridos() >= getDistanciaCarrera()) {
+								coche.setEstado("Terminado");
 							}
-							break;
-						case 3:
-							if(coche.getEstado().equalsIgnoreCase("Accidentado")) {
-								coche.rearrancar();
-							}else {
-								System.out.println("El coche no est√° accidentado");
-							}
-							break;
-						default:
-							break;
+						} catch (InputMismatchException e) {
+							System.out.println("Dato no v·lido");
+						} catch (Exception e) {
+							System.out.println("Error detectado");
+						}
+						System.out.println("Participan " + numCoches() + " coches");
+						System.out.println("Hay " + numCochesMarcha() + " coches arrancados");
+						System.out.println("Hay " + numCochesTerminado() + " coches que han terminado");
+						if (carreraTerminada()) {
+							System.out.println("La carrera ha terminado");
+						} else {
+							System.out.println("La carrera no ha terminado");
 						}
 					}
-				}catch (InputMismatchException e){
-					System.out.println("Dato no v√°lido");
-				}catch (Exception e) {
-					System.out.println("Error detectado");
-				}
-				System.out.println("Participan " + numCoches() + " coches");
-				System.out.println("Hay " + numCochesMarcha() + " coches arrancados");
-				System.out.println("Hay " + numCochesTerminado() + " coches que han terminado");
-				if(carreraTerminada()) {
-					System.out.println("La carrera ha terminado");
-				}else {
-					System.out.println("La carrera no ha terminado");
 				}
 			}
-		} while (carreraTerminada());
+		} while (!carreraTerminada());
 	}
 }
