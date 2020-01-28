@@ -95,27 +95,40 @@ public class Carrera {
 	}
 
 	public boolean poderRearrancar() {
-		boolean lleg = true;
+		//boolean lleg = false;
 		for (Coche coche : vParticipantes) {
-			if (coche.getEstado().equalsIgnoreCase("Terminado")) {
-				lleg = false;
-				break;
+			if (coche!= null && coche.getEstado().equalsIgnoreCase("Terminado")) {
+				return false;
 			}
 		}
-		return lleg;
+		return true;
 	}
 
 	public boolean carreraTerminada() {
-		boolean term = true;
+		int cont = 0;
+		
+		//Busco uno en marcha -> la carrera no termina
 		for (int i = 0; i < numCoches(); i++) {
 			Coche coche = vParticipantes[i];
 			if (coche != null) {
 				if (coche.getEstado().equalsIgnoreCase("Marcha")) {
-					term = false;
-					break;
+					return false;
 				}
 			}
-		}return term;
+		}
+		
+		//Si encuentro uno terminado los accidentados no pueden rearrancar y la carrera termina
+		for (int i = 0; i < numCoches(); i++) {
+			Coche coche = vParticipantes[i];
+			if (coche != null) {
+				if (coche.getEstado().equalsIgnoreCase("Terminado")) {
+					return true;
+				}
+			}
+		}
+		
+		
+		return false;
 
 	}
 
@@ -132,7 +145,35 @@ public class Carrera {
 			return false;
 		}
 	}
-
+	//Aqui se muestra el estado gráfico de la carrera
+	public void pintaCarrera() {
+		String linea;
+		for (int i = 0; i<vParticipantes.length; i++) {
+			linea = "";
+			Coche coche = vParticipantes[i];
+			if(coche!=null) {
+				for (int j = 0; j < distanciaCarrera; j++) {
+					if(j==coche.getKmRecorridos() && coche.getKmRecorridos()<distanciaCarrera) {
+						linea = linea + "c" + (i+1);
+					}else {
+						linea += ".";
+					}
+					if(coche.getEstado()=="Terminado") {
+						if(j==(distanciaCarrera-1)) {
+							linea += "|";
+							linea += "c" + (i+1);
+						}
+					}else {
+						if(j==(distanciaCarrera-1)) {
+							linea+= "|";
+						}
+					}
+				}
+				System.out.println(linea);
+			}
+		}
+	}
+	
 	public void jugar() {
 		Menu menu = new Menu();
 		for (int i = 0; i < vParticipantes.length; i++) {
@@ -140,6 +181,7 @@ public class Carrera {
 				vParticipantes[i].arrancar();
 			}
 		}
+		pintaCarrera();
 		do {
 			for (int i = 0; i < vParticipantes.length; i++) {
 				Coche coche = vParticipantes[i];
@@ -161,34 +203,38 @@ public class Carrera {
 								}
 								break;
 							case 3:
-								if (coche.getEstado().equalsIgnoreCase("Accidentado")) {
+								if (coche.getEstado().equalsIgnoreCase("Accidentado") && poderRearrancar()) {
 									coche.rearrancar();
 								} else {
-									System.out.println("El coche no está accidentado");
+									System.out.println("El coche no se puede rearrancar");
 								}
 								break;
-							default:
-								break;
-							}
-							if (coche.getKmRecorridos() >= getDistanciaCarrera()) {
-								coche.setEstado("Terminado");
 							}
 						} catch (InputMismatchException e) {
 							System.out.println("Dato no válido");
 						} catch (Exception e) {
 							System.out.println("Error detectado");
 						}
+						System.out.println("Velocidad: "+coche.getVelocidad());
+						if(coche.getKmRecorridos()>=distanciaCarrera) {
+							System.out.println("Km recorridos: " + 1000);
+						}else {
+							System.out.println("Km recorridos: " + coche.getKmRecorridos());
+						}
 						System.out.println("Participan " + numCoches() + " coches");
 						System.out.println("Hay " + numCochesMarcha() + " coches arrancados");
 						System.out.println("Hay " + numCochesTerminado() + " coches que han terminado");
-						if (carreraTerminada()) {
-							System.out.println("La carrera ha terminado");
-						} else {
-							System.out.println("La carrera no ha terminado");
-						}
+						pintaCarrera();
 					}
 				}
 			}
 		} while (!carreraTerminada());
+		System.out.println("La carrera ha terminado");
+		for (Coche coche : vParticipantes) {
+			if(coche!=null) {
+				coche.setKmRecorridos(0);
+				coche.setVelocidad(0);
+			}
+		}
 	}
 }

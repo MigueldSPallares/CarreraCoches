@@ -12,7 +12,7 @@ public class Principal {
 		
 		//Dime los datos de la carrera
 		
-		Carrera carrera = new Carrera("Informatica Race", 1000);
+		Carrera carrera = new Carrera("Informatica Race", 100);
 		
 		Menu menu = new Menu();
 		do {

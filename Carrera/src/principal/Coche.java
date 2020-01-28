@@ -74,13 +74,11 @@ public class Coche {
 			velocidad = 0;
 		}else {
 			kmRecorridos = kmRecorridos+velocidad;
-			if(kmRecorridos>distancia) {
-				System.out.println("Kilometros recorridos" + distancia);
-			}else {
-				System.out.println("Kilometros recorridos: " + kmRecorridos);
+			if(kmRecorridos>=distancia) {
+				this.setEstado("Terminado");
 			}
 		}
-		System.out.println("Velocidad: "+velocidad);
+		//System.out.println("Velocidad: "+velocidad);
 	}
 
 	public void frenar() {
@@ -94,12 +92,6 @@ public class Coche {
 			velocidad = 0;
 			kmRecorridos = kmRecorridos+velocidad;
 		}
-		if(kmRecorridos>distancia) {
-			System.out.println("Kilometros recorridos" + distancia);
-		}else {
-			System.out.println("Kilometros recorridos: " + kmRecorridos);
-		}
-		System.out.println("Velocidad: " + velocidad);
 	}
 	public void setVelocidad(double velocidad) {
 		this.velocidad = velocidad;
@@ -115,5 +107,26 @@ public class Coche {
 
 	public void rearrancar() {
 		estado="MARCHA";
+	}
+	public void acelerarTest(int x) {
+		velocidad = velocidad+x;
+		if(velocidad>=200) {
+			estado = "ACCIDENTADO";
+			velocidad = 0;
+		}else {
+			kmRecorridos = kmRecorridos+velocidad;
+			if(kmRecorridos>=distancia) {
+				this.setEstado("Terminado");
+			}
+		}
+	}
+	public void frenarTest(int x) {
+		if(velocidad>=x) {
+			velocidad = velocidad-x;
+			kmRecorridos = kmRecorridos+x;
+		}else {
+			velocidad = 0;
+			kmRecorridos = kmRecorridos+velocidad;
+		}
 	}
 }
